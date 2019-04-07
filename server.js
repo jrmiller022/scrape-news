@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // Connect to the Mongo DB
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/CNNHeadlines";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/unit18populator";
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
@@ -36,12 +36,13 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 // A GET route for scraping the echoJS website
 app.get("/scrape", function (req, res) {
   // First, we grab the body of the html with axios
-  axios.get("http://www.cnn.com/").then(function (response) {
+  axios.get("https://www.kansascity.com/").then(function (response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
+    console.log(response.data);
 
     // Now, we grab every h2 within an article tag, and do the following:
-    $(".banner-text").each(function (i, element) {
+    $("body").each(function (i, element) {
       // Save an empty result object
       var result = {};
 
