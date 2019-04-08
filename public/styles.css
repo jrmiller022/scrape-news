@@ -8,3 +8,7 @@ body {
     font-size: 50px;
     font-weight: bold;
 }
+p {
+    font-weight: bold;
+    font-size: 20px;
+}

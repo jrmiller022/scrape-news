@@ -34,43 +34,45 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 // Routes
 
 // A GET route for scraping the echoJS website
-app.get("/scrape", function (req, res) {
+app.get('/scrape', function (req, res) {
   // First, we grab the body of the html with axios
-  axios.get("https://www.kansascity.com/").then(function (response) {
-    // Then, we load that into cheerio and save it to $ for a shorthand selector
-    var $ = cheerio.load(response.data);
-    console.log(response.data);
+  axios
+    .get('https://www.kansascity.com/')
+    .then(function (response) {
+      // Then, we load that into cheerio and save it to $ for a shorthand selector
+      var $ = cheerio.load(response.data);
+      const results = [];
 
-    // Now, we grab every h2 within an article tag, and do the following:
-    $("body").each(function (i, element) {
-      // Save an empty result object
-      var result = {};
+      // Now, we grab every h2 within an article tag, and do the following:
+      $('.package').each(function (i, element) {
+        // Save an empty result object
+        var result = {};
+        // console.log(element);
 
-      // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this)
-        .children("a")
-        .text();
-      result.title = $(this)
-        .children("a")
-        .attr("href")
+        // Add the text and href of every link, and save them as properties of the result object
+        result.title = $(this)
+          .find('a')
+          .text();
+        result.link = $(this)
+          .find('a')
+          .attr('href');
 
-      console.log(result);
+        results.push(result);
+      });
 
-      // Create a new Article using the `result` object built from scraping
-      db.Article.create(result)
+      return results;
+    })
+    .then(results => {
+      db.Article.create(results)
         .then(function (dbArticle) {
           // View the added result in the console
-          console.log(dbArticle);
+          res.send('Scrape Complete');
         })
         .catch(function (err) {
           // If an error occurred, log it
           console.log(err);
         });
     });
-
-    // Send a message to the client
-    res.send("Scrape Complete");
-  });
 });
 
 // Route for getting all Articles from the db
