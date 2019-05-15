@@ -8,5 +8,5 @@
 
 ### screen shot of landing page.
 
-![alt text](/public/images/news-screen-shot.png)
+![alt text](/public/images/news-pic.png)
 
